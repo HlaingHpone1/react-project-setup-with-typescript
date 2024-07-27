@@ -1,5 +1,5 @@
 import Navbar from './Navbar'
-import Footer from '../pages/Footer'
+import Footer from './Footer'
 import { Outlet } from 'react-router-dom'
 
 // import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
