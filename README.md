@@ -9,4 +9,5 @@
 - Axios
 - React Router Dom
 - Zustand
-- Tailwind
+- Tailwind V4
+- Husky
