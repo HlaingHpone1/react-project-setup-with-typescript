@@ -1,78 +1,50 @@
-import { useUserStore } from '../stores/useUserStore';
-import Login from '../pages/Login';
-import Register from '../pages/Register.tsx';
-import MainLayout from '../layouts/MainLayout';
-import Home from '../pages/Home';
-import Product from '../pages/Product';
-import NotFound from '../pages/NotFound';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
+import { createBrowserRouter } from 'react-router';
 
-const Router = () => {
-  const { userData, logInUser } = useUserStore();
+import { USER_ROLES } from '@/constants';
+import { authLoader } from '@/utils';
 
-  const authRouteList = [
-    {
-      path: '/login',
-      element: Login,
-    },
-    {
-      path: '/register',
-      element: Register,
-    },
-  ];
+const MainLayout = lazy(() => import('@/layouts/MainLayout'));
 
-  const routeList = [
-    {
-      path: '/',
-      element: MainLayout,
-      children: [
-        {
-          path: '/',
-          element: Home,
-          role: ['Admin', 'User'],
-        },
-        {
-          path: '/product',
-          element: Product,
-          role: ['Admin', 'User'],
-        },
-      ],
-    },
-    {
-      name: 'Not Found',
-      path: '*',
-      element: NotFound,
-    },
-  ];
+const Home = lazy(() => import('@/pages/Home'));
+const Product = lazy(() => import('@/pages/Product'));
+const Login = lazy(() => import('@/pages/Login'));
+const Register = lazy(() => import('@/pages/Register'));
+const NotFound = lazy(() => import('@/pages/NotFound'));
 
-  return (
-    <>
-      {logInUser ? (
-        <Routes>
-          {routeList.map((route, i) => (
-            <Route key={i} path={route.path} element={<route.element />}>
-              {route.children?.map((subRoute, j) =>
-                userData && subRoute.role.includes(userData.role) ? (
-                  <Route
-                    key={j}
-                    path={subRoute?.path}
-                    element={<subRoute.element />}
-                  />
-                ) : null
-              )}
-            </Route>
-          ))}
-        </Routes>
-      ) : (
-        <Routes>
-          {authRouteList.map((route, i) => (
-            <Route key={i} path={route.path} element={<route.element />} />
-          ))}
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
-      )}
-    </>
-  );
-};
+const withSuspense = (Component: React.ComponentType) => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <Component />
+  </Suspense>
+);
 
-export default Router;
+export const router = createBrowserRouter([
+  {
+    path: '/',
+    element: withSuspense(MainLayout),
+    children: [
+      {
+        path: '/home',
+        loader: authLoader([USER_ROLES.ADMIN.key, USER_ROLES.USER.key]),
+        element: withSuspense(Home),
+      },
+      {
+        path: 'products',
+        loader: authLoader([USER_ROLES.ADMIN.key, USER_ROLES.USER.key]),
+        element: withSuspense(Product),
+      },
+    ],
+  },
+  {
+    path: '/login',
+    element: withSuspense(Login),
+  },
+  {
+    path: '/register',
+    element: withSuspense(Register),
+  },
+  {
+    path: '*',
+    element: withSuspense(NotFound),
+  },
+]);

@@ -38,12 +38,41 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
-      'no-unused-vars': ['warn'],
+      'prettier/prettier': 'error',
+      'unicorn/filename-case': [
+        'error',
+        {
+          cases: {
+            camelCase: true,
+            pascalCase: true,
+            kebabCase: true,
+            snakeCase: false,
+          },
+        },
+      ],
       '@typescript-eslint/no-unused-vars': ['warn'],
       '@typescript-eslint/no-explicit-any': 'error',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
+      'unicorn/prevent-abbreviations': 'off',
       'unicorn/better-regex': 'warn',
+      'import/no-unresolved': 'error',
+      'import/named': 'error',
+      'import/no-duplicates': 'error',
+      'import/order': [
+        'error',
+        {
+          groups: ['builtin', 'external', 'internal'],
+          'newlines-between': 'always',
+        },
+      ],
+    },
+    settings: {
+      'import/resolver': {
+        typescript: {
+          project: './tsconfig.json',
+        },
+      },
     },
   }
 );

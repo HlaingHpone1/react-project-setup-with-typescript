@@ -2,11 +2,11 @@ import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
 interface UserStore {
-  logInUser: boolean;
-  userData: UserData | null;
+  isAuthenticated: boolean;
+  userData: UserData | undefined;
 
-  setLogInUser: (logInUser: boolean) => void;
-  setUserData: (data: UserData) => void;
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
+  setUserData: (data: UserData | undefined) => void;
   logOut: () => void;
 }
 
@@ -14,15 +14,16 @@ export const useUserStore = create<UserStore>()(
   devtools(
     persist<UserStore>(
       set => ({
-        logInUser: false,
-        userData: null,
+        isAuthenticated: false,
+        userData: undefined,
 
-        setLogInUser: (logInUser: boolean) => set({ logInUser: logInUser }),
-        setUserData: (data: UserData) => set({ userData: data }),
+        setIsAuthenticated: (isAuthenticated: boolean) =>
+          set({ isAuthenticated: isAuthenticated }),
+        setUserData: (data: UserData | undefined) => set({ userData: data }),
         logOut: () => {
           set(() => ({
-            logInUser: false,
-            userData: null,
+            isAuthenticated: false,
+            userData: undefined,
           }));
           localStorage.removeItem('userStore');
         },

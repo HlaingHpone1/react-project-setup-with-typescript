@@ -5,4 +5,4 @@ interface UserData {
   role: UserRole;
 }
 
-type UserRole = 'Admin' | 'User';
+type UserRole = 'ADMIN' | 'USER';
