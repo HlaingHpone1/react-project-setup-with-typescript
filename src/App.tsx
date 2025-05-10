@@ -1,3 +1,5 @@
+import Router from './routers';
+
 function App() {
 	return (
 		<>
@@ -7,7 +9,8 @@ function App() {
 				dolores odio ab eum corrupti eaque ipsam, excepturi dicta
 				maiores maxime commodi. Providen t, officiis tempora!
 			</p>
-			THis is a test
+			His is a test T
+			<Router />
 		</>
 	);
 }
